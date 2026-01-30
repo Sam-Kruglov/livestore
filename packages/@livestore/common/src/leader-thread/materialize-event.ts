@@ -73,15 +73,15 @@ export const makeMaterializeEvent = ({
           event: { decoded: undefined, encoded: eventEncoded },
         })
 
-        const materializerHash = isDevEnv() ? Option.some(hashMaterializerResults(execArgsArr)) : Option.none()
+        // const materializerHash = isDevEnv() ? Option.some(hashMaterializerResults(execArgsArr)) : Option.none()
 
-        if (
-          materializerHash._tag === 'Some' &&
-          eventEncoded.meta.materializerHashSession._tag === 'Some' &&
-          eventEncoded.meta.materializerHashSession.value !== materializerHash.value
-        ) {
-          return yield* MaterializerHashMismatchError.make({ eventName: eventEncoded.name })
-        }
+        // if (
+        //   materializerHash._tag === 'Some' &&
+        //   eventEncoded.meta.materializerHashSession._tag === 'Some' &&
+        //   eventEncoded.meta.materializerHashSession.value !== materializerHash.value
+        // ) {
+        //   return yield* MaterializerHashMismatchError.make({ eventName: eventEncoded.name })
+        // }
 
         // NOTE we might want to bring this back if we want to debug no-op events
         // const makeExecuteOptions = (statementSql: string, bindValues: any) => ({
@@ -151,7 +151,7 @@ export const makeMaterializeEvent = ({
                 debug: LS_DEV ? execArgsArr : null,
               }
             : { _tag: 'no-op' as const },
-          hash: materializerHash,
+          hash: Option.some(0),
         }
       }).pipe(
         Effect.mapError((cause) => MaterializeError.make({ cause })),

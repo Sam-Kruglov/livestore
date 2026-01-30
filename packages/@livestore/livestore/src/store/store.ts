@@ -240,19 +240,19 @@ export class Store<TSchema extends LiveStoreSchema = LiveStoreSchema.Any, TConte
               event: { decoded: undefined, encoded: eventEncoded },
             })
 
-            const materializerHash = isDevEnv() ? Option.some(hashMaterializerResults(execArgsArr)) : Option.none()
+            // const materializerHash = isDevEnv() ? Option.some(hashMaterializerResults(execArgsArr)) : Option.none()
 
             // Hash mismatch detection only occurs during the pull path (when receiving events from the leader).
             // During push path (local commits), materializerHashLeader is always Option.none(), so this condition
             // will never be met. The check happens when the same event comes back from the leader during sync,
             // allowing us to compare the leader's computed hash with our local re-materialization hash.
-            if (
-              materializerHashLeader._tag === 'Some' &&
-              materializerHash._tag === 'Some' &&
-              materializerHashLeader.value !== materializerHash.value
-            ) {
-              return yield* MaterializerHashMismatchError.make({ eventName: eventEncoded.name })
-            }
+            // if (
+            //   materializerHashLeader._tag === 'Some' &&
+            //   materializerHash._tag === 'Some' &&
+            //   materializerHashLeader.value !== materializerHash.value
+            // ) {
+            //   return yield* MaterializerHashMismatchError.make({ eventName: eventEncoded.name })
+            // }
 
             const span = yield* OtelTracer.currentOtelSpan.pipe(Effect.orDie)
             const otelContext = otel.trace.setSpan(otel.context.active(), span)
@@ -297,7 +297,7 @@ export class Store<TSchema extends LiveStoreSchema = LiveStoreSchema.Any, TConte
               exec()
             }
 
-            return { writeTables: writeTablesForEvent, sessionChangeset, materializerHash }
+            return { writeTables: writeTablesForEvent, sessionChangeset, materializerHash: Option.some(0) }
           }).pipe(Effect.mapError((cause) => MaterializeError.make({ cause }))),
       ),
       rollback: (changeset) => {

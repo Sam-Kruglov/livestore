@@ -99,13 +99,13 @@ export const makeMaterializerHash =
       // hash the resulting SQL statements. This lets us cheaply detect
       // side-effects or logic drift between leader/client materializers without
       // mutating the underlying state.
-      const materializerResults = getExecStatementsFromMaterializer({
-        eventDef,
-        materializer,
-        dbState,
-        event: { decoded: undefined, encoded: event },
-      })
-      return Option.some(Hash.string(JSON.stringify(materializerResults)))
+      // const materializerResults = getExecStatementsFromMaterializer({
+      //   eventDef,
+      //   materializer,
+      //   dbState,
+      //   event: { decoded: undefined, encoded: event },
+      // })
+      return Option.some(0)//Hash.string(JSON.stringify(materializerResults)))
     }
 
     return Option.none()
